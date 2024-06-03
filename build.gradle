@@ -1,0 +1,80 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.3.0'
+	id 'io.spring.dependency-management' version '1.1.5'
+}
+
+group = 'com.github.jarvvski'
+version = '0.0.1-SNAPSHOT'
+
+ext {
+	twTasksVersion = '1.41.+'
+}
+
+java {
+	sourceCompatibility = '22'
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+
+	////////////////////////////////////////////
+	// Spring Starters & managed dependencies //
+	////////////////////////////////////////////
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.kafka:spring-kafka'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
+	annotationProcessor 'org.projectlombok:lombok'
+	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+	runtimeOnly 'org.postgresql:postgresql'
+	runtimeOnly 'org.flywaydb:flyway-database-postgresql'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+	testImplementation 'org.springframework.kafka:spring-kafka-test'
+	testImplementation 'org.testcontainers:junit-jupiter'
+	testImplementation 'org.testcontainers:kafka'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	///////////////////////////////////////
+	// Manually controlled dependencies //
+	//////////////////////////////////////
+
+	// https://github.com/cowtowncoder/java-uuid-generator
+	implementation 'com.fasterxml.uuid:java-uuid-generator:4.3.0'
+
+	// manually forcing flyway to newer version than Spring boot wants
+	implementation 'org.flywaydb:flyway-core:10.13.+'
+
+	// google guava
+	implementation 'com.google.guava:guava:33.2.0-jre'
+
+	// https://github.com/datafaker-net/datafaker
+	implementation 'net.datafaker:datafaker:2.2.2'
+
+	// used for Notification template interpolation
+	implementation 'org.apache.commons:commons-text:1.12.+'
+
+	// Task scheduling
+	implementation "com.transferwise.tasks:tw-tasks-core-spring-boot-starter:${twTasksVersion}"
+	implementation "com.transferwise.tasks:tw-tasks-kafka-listener-spring-boot-starter:${twTasksVersion}"
+	implementation "com.transferwise.tasks:tw-tasks-management-spring-boot-starter:${twTasksVersion}"
+	testImplementation "com.transferwise.tasks:tw-tasks-core-test:${twTasksVersion}"
+
+	implementation 'com.transferwise.common:tw-curator-starter:0.5.2'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

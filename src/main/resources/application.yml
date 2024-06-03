@@ -1,0 +1,31 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: "notification-service"
+  datasource:
+    password: 'secret'
+    username: 'root'
+    hikari:
+      jdbc-url: 'jdbc:postgresql://db:5432/notification'
+  kafka:
+    bootstrap-servers: host.local:9092
+    client-id: notification-service
+    consumer:
+      groupId: 'notification-service'
+      enableAutoCommit: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+tw-tasks:
+  core:
+    group-id: 'notification-service'
+    db-type: POSTGRES
+    zookeeperConnectString: ${VALUE_HERE}
+    triggering:
+      kafka:
+        bootstrapServers: ${VALUE_HERE}
+    environment:
+      previousVersion: "1.37.1"
